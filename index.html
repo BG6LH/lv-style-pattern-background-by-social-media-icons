@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LV style pattern background by social media icons</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url('');
+            background-repeat: repeat;
+            background-color: #171717; /* Neutral-900 tailwind color in RGB */ 
+            overflow: hidden;
+        }
+    </style>
+    <script>
+        const iconUrls = [
+            'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/meta.svg',
+            'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/wechat.svg',
+            'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/x.svg',
+            'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/xiaohongshu.svg',
+            'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/instagram.svg',
+            'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/tiktok.svg',
+            'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/youtube.svg',
+            'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/sinaweibo.svg'
+        ];
+
+        const iconSize = 36;
+        const iconArea = iconSize * 2 ; // The iconArea is more than 2 times the iconSize works best
+        const iconRotatde = 0; // rotation of icons
+
+        Promise.all(iconUrls.map(url => fetch(url).then(response => response.text())))
+          .then(icons => {
+                const coloredIcons = icons.map(icon => {
+                    const rootSvgStart = '<svg';
+                    const rootSvgEnd = '>';
+                    const rootSvgIndex = icon.indexOf(rootSvgStart);
+                    const rootSvgEndIndex = icon.indexOf(rootSvgEnd, rootSvgIndex);
+                    let newIcon = icon.slice(0, rootSvgEndIndex) + ' fill="none"' + icon.slice(rootSvgEndIndex);
+                    return newIcon.replace(/<path/g, '<path fill="#404040"'); // tailwind color: neutral-600
+                });
+
+                const svgTemplate = `
+<svg xmlns="http://www.w3.org/2000/svg" width="${iconArea*4}" height="${iconArea*2}" fill="none">
+  <svg x="${iconArea*0.1}" y="${iconArea*0.1}" width="${iconSize}" height="${iconSize}"><g transform="rotate(${iconRotatde} ${iconSize / 2} ${iconSize / 2})">${coloredIcons[0]}</g></svg>
+  <svg x="${iconArea*1.1}" y="${iconArea*0.1}" width="${iconSize}" height="${iconSize}"><g transform="rotate(${iconRotatde} ${iconSize / 2} ${iconSize / 2})">${coloredIcons[1]}</g></svg>
+  <svg x="${iconArea*2.1}" y="${iconArea*0.1}" width="${iconSize}" height="${iconSize}"><g transform="rotate(${iconRotatde} ${iconSize / 2} ${iconSize / 2})">${coloredIcons[2]}</g></svg>
+  <svg x="${iconArea*3.1}" y="${iconArea*0.1}" width="${iconSize}" height="${iconSize}"><g transform="rotate(${iconRotatde} ${iconSize / 2} ${iconSize / 2})">${coloredIcons[3]}</g></svg>
+  <svg x="${iconArea*0.6}" y="${iconArea*1.1}" width="${iconSize}" height="${iconSize}"><g transform="rotate(${iconRotatde} ${iconSize / 2} ${iconSize / 2})">${coloredIcons[4]}</g></svg>
+  <svg x="${iconArea*1.6}" y="${iconArea*1.1}" width="${iconSize}" height="${iconSize}"><g transform="rotate(${iconRotatde} ${iconSize / 2} ${iconSize / 2})">${coloredIcons[5]}</g></svg>
+  <svg x="${iconArea*2.6}" y="${iconArea*1.1}" width="${iconSize}" height="${iconSize}"><g transform="rotate(${iconRotatde} ${iconSize / 2} ${iconSize / 2})">${coloredIcons[6]}</g></svg>
+  <svg x="${iconArea*3.6}" y="${iconArea*1.1}" width="${iconSize}" height="${iconSize}"><g transform="rotate(${iconRotatde} ${iconSize / 2} ${iconSize / 2})">${coloredIcons[7]}</g></svg>
+</svg>
+`;
+
+                const encodedSvg = encodeURIComponent(svgTemplate);
+                document.body.style.backgroundImage = `url('data:image/svg+xml;utf8,${encodedSvg}')`;
+            })
+          .catch(error => console.error('Error fetching icons:', error));
+    </script>
+</head>
+
+<body class="bg-neutral-800">
+    <div class="h-screen"></div>
+</body>
+
+</html>
